@@ -32,7 +32,7 @@ class OrderItems {
     Shop? shop;
     String? orderItemsCode;
     int? quantity;
-    double? price;
+    int? price;
     Forwarder? forwarder;
     dynamic destinationContry;
     String? fraisInterne;

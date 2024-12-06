@@ -71,30 +71,31 @@ class HomeController extends GetxController {
   }
 
   Future<void> getOrderItemByCode(String code) async {
-    try {
-      isLoadingOrder.value = true;
+    
+
+     try {
+       isLoadingOrder.value = true;
       final response = await orderApiProvider.getOrderItemByCode(code);
-      if (response?.statusCode == 200) {
-        final orderItem = OrderItems.fromJson(response?.data['data']);
-        if(orderItem.statusTransitaireToCity?.toLowerCase() == 'pending'){
-           orderItemByCode.add(orderItem);
-        } else {
-          Get.snackbar("Commande non trouvée", "La commande avec le code $code n'existe pas",backgroundColor: Colors.red,colorText: Colors.white);
-          orderItemByCode.clear();
-        }
-      } else {
-        throw Exception('Échec de la récupération de l\'article : ${response?.statusCode}');
+      if(response?.data['data'] != null){
+         final orderItem = OrderItems.fromJson(response?.data['data']);
+        orderItemByCode.add(orderItem);
+          isLoadingOrder.value = false;
+      }else{
+        Get.snackbar("Commande non trouvée", "La commande avec le code $code n'existe pas",backgroundColor: Colors.red,colorText: Colors.white);
+        orderItemByCode.clear();
+        isLoadingOrder.value = false;
       }
-    } catch (e) {
-      isLoadingOrder.value = false;
-      Get.snackbar(
-        "Erreur",
-        "Impossible de récupérer l\'article avec le code $code",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-    isLoadingOrder.value = false;
+     }
+      catch (e) {
+        isLoadingOrder.value = false;
+        Get.snackbar(
+          "Erreur",
+          "Impossible de récupérer l\'article avec le code $code",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+     
   }
 
   Future<void> getOrderItems() async {

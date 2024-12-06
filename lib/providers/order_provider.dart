@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:trans_app/providers/api_provider.dart';
 
 class OrderApiProvider{
@@ -42,7 +44,10 @@ class OrderApiProvider{
         throw Exception('Erreur lors de la connexion : ${response.data}');
       }
     } on DioException catch (e) {
-      print(e.response?.statusCode);
+      if(e.response?.statusCode == 400){
+        Get.snackbar("Commande non trouvée", "La commande avec le code $code n'existe pas",backgroundColor: Colors.red,colorText: Colors.white);
+        return null;
+      }
       throw Exception('Erreur lors de la connexion : ${e.response?.data}');
     }
   }
